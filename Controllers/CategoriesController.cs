@@ -1,37 +1,44 @@
-﻿using Bookify.Web.Core.Models;
+﻿using AutoMapper;
+using Bookify.Web.Core.Models;
 using Bookify.Web.Core.ViewModels;
 using Bookify.Web.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookify.Web.Controllers
 {
 	public class CategoriesController : Controller
 	{
 		private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-		public CategoriesController( ApplicationDbContext context) 
+        public CategoriesController( ApplicationDbContext context , IMapper mapper) 
         {
 			_context = context;
-		}
+            _mapper = mapper;
+        }
         public IActionResult Index()
 		{
-			var category = _context.Categories.ToList();
+			var category = _context.Categories.AsNoTracking().ToList();
+			
+			var MappedCate = _mapper.Map< IEnumerable<CategoryView>>(category);
 
-			return View(category);
+
+			return View(MappedCate);
 		}
 		[HttpGet]	
 		
 		public IActionResult Create()
 		{
 
-			return View();
+			return PartialView("_Form");
 		}
 
 		[HttpPost]
 		public IActionResult Create(CategoryViewModel model)
 		{
 			if (!ModelState.IsValid)
-				return View(model);
+				return BadRequest();
 
 			var categ = new Category
 			{
@@ -41,7 +48,9 @@ namespace Bookify.Web.Controllers
 			_context.Add(categ);
 			_context.SaveChanges();
 
-			return RedirectToAction("Index");
+			var MappedCate = _mapper.Map<CategoryView>(categ);
+
+			return PartialView("_CategoryRow" , MappedCate);
 		}
 
 		public IActionResult Edit( int id)
@@ -59,7 +68,10 @@ namespace Bookify.Web.Controllers
 
 			};
 
-			return View(viewModel);
+            TempData["Message"] = "Save Successfully";
+
+
+            return View("_form" , viewModel);
 		}
 	
 
@@ -77,6 +89,8 @@ namespace Bookify.Web.Controllers
 				category.LastUpdateDate = DateTime.Now;
 				_context.SaveChanges();
 			
+
+
 				return RedirectToAction(nameof(Index));
 			}
 
@@ -97,6 +111,21 @@ namespace Bookify.Web.Controllers
 			_context.SaveChanges();
 
 			return Ok(lastUodatedOn.ToString());		
+		}
+
+
+
+		public IActionResult AllowItem(CategoryViewModel model)
+		{
+			var category = _context.Categories.SingleOrDefault(C => C.Name == model.Name);
+
+
+
+			var isAllow = category is null || category.id == model.Id;
+
+			return Json(isAllow);
+
+
 		}
 
 	}

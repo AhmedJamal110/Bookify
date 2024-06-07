@@ -1,5 +1,7 @@
 using Bookify.Web.Data;
+using Bookify.Web.Helper.Mapping;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Bookify.Web
 {
@@ -16,6 +18,8 @@ namespace Bookify.Web
 				opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString"));
 			});
 
+
+			builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
 
 			var app = builder.Build();
 
