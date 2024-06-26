@@ -8,7 +8,11 @@ namespace Bookify.Web.Helper.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Category, CategoryView>();
+            CreateMap<Category, CategoryView>().ReverseMap();
+
+
+            CreateMap<Author, AuthorView>().ReverseMap();
+            CreateMap<AuthorViewModel, Author>().ReverseMap();
         }
 
     }

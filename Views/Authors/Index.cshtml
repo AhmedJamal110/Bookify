@@ -1,18 +1,17 @@
-﻿ @model IEnumerable<CategoryView>
-
+﻿ @model IEnumerable<AuthorView>
 
  @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiKey
 
 @{
-    ViewData["Title"] = "CategriesView";
+    ViewData["Title"] = "AuthorsView";
 }
- 
+
 @section CustomScripts {
     <link href="~/js/plugins/datatables/datatables.bundle.css" rel="stylesheet" />
 }
 
 <div class="alert bg-light-primary border border-primary border-dashed d-flex justify-content-between flex-sm-row w-100 p-5 mb-10">
-   
+
     <div class="d-flex align-items-center">
         <div class="symbol symbol-40px d-flex  me-4">
             <div class="symbol-label fs-2 fw-semibold text-success">
@@ -29,22 +28,22 @@
         <!--begin::Content-->
 
         <div class="d-flex flex-column pe-0 pe-sm-10 ">
-            <h5 class="mb-1">Categories</h5>
+            <h5 class="mb-1">Authors</h5>
         </div>
 
-</div>
-  
-        <!--end::Content-->
-      
-        <div>
+    </div>
+
+    <!--end::Content-->
+
+    <div>
         <a href="javascript:;" class="btn btn-sm btn-primary js-render-modal"
-           data-title="Add Category" data-url="/Categories/Create">
+           data-title="Add Author" data-url="/Authors/Create">
 
             <i class="bi bi-plus-square-dotted  "></i>
             Add
         </a>
-        </div>
-      
+    </div>
+
 
 
 </div>
@@ -60,11 +59,10 @@
 <div class="card shadow-sm">
     <div class="card-header">
         <h3 class="card-title">
-            
-            Categories
-            </h3>
+
+            Authors
+        </h3>
         <div class="card-toolbar">
-            
         </div>
     </div>
     <div class="card-body">
@@ -98,7 +96,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th >Stauts</th>
+                            <th>Stauts</th>
                             <th>Create On</th>
                             <th>Last Updated On</th>
                             <th>Actions</th>
@@ -106,41 +104,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach( var category in Model)
+                        @foreach (var author in Model)
                         {
-                            <partial name="_CategoryRow" model="@category" />
+                            <partial name="_AuthorsRow" model="@author" />
 
                         }
                     </tbody>
-                
-                
+
+
                 </table>
 
 
 
             </div>
 
-           
+
         }
 
     </div>
 
     <input hidden name="__RequestVerificationToken" value="@antiKey.GetAndStoreTokens(Context).RequestToken" />
-@section Plugin {
-    <script src="~/js/plugins/datatables/datatables.bundle.js"></script>
+    @section Plugin {
+        <script src="~/js/plugins/datatables/datatables.bundle.js"></script>
     }
 
 
 
-@section Scripts{
+    @section Scripts {
         <partial name="_ValidationScriptsPartial" />
-       
-        
-<script>
+
+
+        <script>
 
 
         </script>
 
 
 
-}
+    }
